@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Dataset, Model, and Template Selector</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .select-group {
+            flex: 1;
+            margin: 0 10px;
+        }
+        select {
+            width: 100%;
+            padding: 5px;
+        }
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dynamic Dataset, Model, and Template Selector</h1>
+
+    <div class="container">
+        <div class="select-group">
+            <label for="dataset">Dataset:</label>
+            <select id="dataset"></select>
+        </div>
+
+        <div class="select-group">
+            <label for="model">Model:</label>
+            <select id="model"></select>
+        </div>
+
+        <div class="select-group">
+            <label for="template">Template:</label>
+            <select id="template"></select>
+        </div>
+    </div>
+
+    <div id="result">
+        <!-- The associated text will be displayed here -->
+    </div>
+
+    <script>
+        const datasetSelect = document.getElementById('dataset');
+        const modelSelect = document.getElementById('model');
+        const templateSelect = document.getElementById('template');
+        const resultDiv = document.getElementById('result');
+
+        let combinations = {};
+
+        // Function to parse CSV content
+        function parseCSV(csv) {
+            const lines = csv.split('\n');
+            const result = [];
+            for (let i = 1; i < lines.length; i++) {
+                if (lines[i].trim() === '') continue;
+                // Use regular expressions to split only by the first comma, which separates the template and the text list
+                const match = lines[i].match(/^([^,]+),(.+)$/);
+                if (match) {
+                    const [_, template, textList] = match;
+                    result.push({
+                        template: template,
+                        text: JSON.parse(textList.replace(/'/g, '"'))
+                    });
+                }
+            }
+            return result;
+        }
+
+        // Function to load CSV file
+        async function loadCSV(filename) {
+            try {
+                const response = await fetch(filename);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const csvContent = await response.text();
+                return parseCSV(csvContent);
+            } catch (error) {
+                console.error(`Error loading ${filename}:`, error);
+                return [];
+            }
+        }
+
+        // Function to populate dropdowns
+        async function populateDropdowns() {
+            const datasets = ['CNN/DailyMail', 'Rotten Tomatoes', 'Cochrane'];
+            const models = ['Llama-2-70B', 'Llama-3-70B', 'OLMo-7B', 'Mistral-7B', 'GPT4-o'];
+
+            datasets.forEach(dataset => {
+                const option = document.createElement('option');
+                option.value = dataset;
+                option.textContent = dataset;
+                datasetSelect.appendChild(option);
+            });
+
+            models.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model;
+                option.textContent = model;
+                modelSelect.appendChild(option);
+            });
+
+            // Load all CSV files and populate combinations object
+            for (const dataset of datasets) {
+                for (const model of models) {
+                    const filename = `/web/data/${dataset}_${model}.csv`;
+                    const data = await loadCSV(filename);
+                    if (!combinations[dataset]) combinations[dataset] = {};
+                    combinations[dataset][model] = data;
+                }
+            }
+        }
+
+        function updateTemplates() {
+            const selectedDataset = datasetSelect.value;
+            const selectedModel = modelSelect.value;
+
+            templateSelect.innerHTML = '<option value="">Choose a template</option>';
+
+            if (selectedDataset && selectedModel && combinations[selectedDataset][selectedModel]) {
+                combinations[selectedDataset][selectedModel].forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.template;
+                    option.textContent = item.template;
+                    templateSelect.appendChild(option);
+                });
+            }
+        }
+
+        function updateResult() {
+            const selectedDataset = datasetSelect.value;
+            const selectedModel = modelSelect.value;
+            const selectedTemplate = templateSelect.value;
+
+            if (selectedDataset && selectedModel && selectedTemplate) {
+                const selectedItem = combinations[selectedDataset][selectedModel].find(item => item.template === selectedTemplate);
+                if (selectedItem && selectedItem.text.length > 0) {
+                    // Display a random text from the list
+                    const randomIndex = Math.floor(Math.random() * selectedItem.text.length);
+                    resultDiv.textContent = selectedItem.text[randomIndex];
+                } else {
+                    resultDiv.textContent = 'No text available for this combination';
+                }
+            } else {
+                resultDiv.textContent = 'Please select a dataset, model, and template';
+            }
+        }
+
+        // Initialize dropdowns and load data
+        populateDropdowns().then(() => {
+            console.log('Data loaded successfully');
+        }).catch(error => {
+            console.error('Error loading data:', error);
+        });
+
+        datasetSelect.addEventListener('change', updateTemplates);
+        modelSelect.addEventListener('change', updateTemplates);
+        templateSelect.addEventListener('change', updateResult);
+    </script>
+</body>
+</html>
