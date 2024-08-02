@@ -34,17 +34,23 @@
     <div class="container">
         <div class="select-group">
             <label for="dataset">Dataset:</label>
-            <select id="dataset"></select>
+            <select id="dataset">
+                <option value="">Choose a dataset</option>
+            </select>
         </div>
 
         <div class="select-group">
             <label for="model">Model:</label>
-            <select id="model"></select>
+            <select id="model">
+                <option value="">Choose a model</option>
+            </select>
         </div>
 
         <div class="select-group">
             <label for="template">Template:</label>
-            <select id="template"></select>
+            <select id="template">
+                <option value="">Choose a template</option>
+            </select>
         </div>
     </div>
 
@@ -66,7 +72,6 @@
             const result = [];
             for (let i = 1; i < lines.length; i++) {
                 if (lines[i].trim() === '') continue;
-                // Use regular expressions to split only by the first comma, which separates the template and the text list
                 const match = lines[i].match(/^([^,]+),(.+)$/);
                 if (match) {
                     const [_, template, textList] = match;
@@ -117,9 +122,11 @@
             for (const dataset of datasets) {
                 for (const model of models) {
                     const filename = `/web/data/${dataset}_${model}.csv`;
+                    console.log(`Loading data for ${dataset} - ${model}`);
                     const data = await loadCSV(filename);
                     if (!combinations[dataset]) combinations[dataset] = {};
                     combinations[dataset][model] = data;
+                    console.log(`Loaded data for ${dataset} - ${model}`, data);
                 }
             }
         }
@@ -130,13 +137,15 @@
 
             templateSelect.innerHTML = '<option value="">Choose a template</option>';
 
-            if (selectedDataset && selectedModel && combinations[selectedDataset][selectedModel]) {
+            if (selectedDataset && selectedModel && combinations[selectedDataset] && combinations[selectedDataset][selectedModel]) {
                 combinations[selectedDataset][selectedModel].forEach(item => {
                     const option = document.createElement('option');
                     option.value = item.template;
                     option.textContent = item.template;
                     templateSelect.appendChild(option);
                 });
+            } else {
+                console.log(`No templates found for dataset: ${selectedDataset} and model: ${selectedModel}`);
             }
         }
 
@@ -148,7 +157,6 @@
             if (selectedDataset && selectedModel && selectedTemplate) {
                 const selectedItem = combinations[selectedDataset][selectedModel].find(item => item.template === selectedTemplate);
                 if (selectedItem && selectedItem.text.length > 0) {
-                    // Display a random text from the list
                     const randomIndex = Math.floor(Math.random() * selectedItem.text.length);
                     resultDiv.textContent = selectedItem.text[randomIndex];
                 } else {
