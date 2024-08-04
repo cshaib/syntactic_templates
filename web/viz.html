@@ -100,7 +100,7 @@
             // Load all JSON files and populate combinations object
             for (const dataset of datasets) {
                 for (const model of models) {
-                    const filename = `web/data/${model}_${dataset}.json`;
+                    const filename = `data/${model}_${dataset}.json`;
                     const data = await loadJSON(filename);
                     if (!combinations[dataset]) combinations[dataset] = {};
                     combinations[dataset][model] = data;
