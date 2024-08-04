@@ -72,13 +72,20 @@
             for (let i = 1; i < lines.length; i++) {
                 if (lines[i].trim() === '') continue;
                 const [template, textList] = lines[i].split('\t');
+                let parsedText;
+                try {
+                    parsedText = JSON.parse(textList.replace(/'/g, '"').replace(/\\/g, '\\\\'));
+                } catch (error) {
+                    console.error(`Error parsing text for template ${template}:`, error);
+                    parsedText = [textList]; // Use the raw text as a fallback
+                }
                 result.push({
                     template: template,
-                    text: JSON.parse(textList.replace(/'/g, '"'))
+                    text: Array.isArray(parsedText) ? parsedText : [parsedText]
                 });
             }
             return result;
-        }
+}
 
         // Function to load CSV file
         async function loadCSV(filename) {
@@ -90,21 +97,15 @@
                 }
                 const csvContent = await response.text();
                 console.log(`Successfully loaded: ${filename}`);
+                console.log('First 200 characters of CSV content:', csvContent.substring(0, 200));
                 return parseCSV(csvContent);
             } catch (error) {
                 console.error(`Error loading ${filename}:`, error);
                 return [];
             }
-        }
-
+}
         // Function to populate dropdowns
         async function populateDropdowns() {
-<<<<<<< HEAD
-=======
-            const datasets = ['CNN_DailyMail', 'Rotten_Tomatoes', 'Cochrane'];
-            const models = ['Llama-2-70B', 'Llama-3-70B', 'OLMo-7B', 'Mistral-7B', 'GPT4-o'];
-
->>>>>>> 734c6881e142e2bff72526bb21e53314f62d2b8e
             datasets.forEach(dataset => {
                 const option = document.createElement('option');
                 option.value = dataset;
