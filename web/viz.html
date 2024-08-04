@@ -3,22 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Template Explorer</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
         .explanation {
             margin-bottom: 2rem;
         }
     </style>
 </head>
-
 <body class="bg-light">
     <div class="container py-5">
         <h1 class="text-center mb-4">Template Explorer</h1>
-
 
         <div class="explanation bg-white p-4 rounded shadow-sm">
             <h2 class="h4">What is this?</h2>
@@ -49,6 +45,10 @@
         <div id="result" class="mt-4 p-3 bg-white rounded shadow-sm">
             <p class="text-muted">Loading...</p>
         </div>
+
+        <div class="mt-4">
+            <a href="index.html" class="btn btn-primary">Back to Project Page</a>
+        </div>
     </div>
 
     <!-- Bootstrap JS -->
@@ -64,46 +64,23 @@
         const datasets = ['CNN_DailyMail', 'Rotten Tomatoes', 'Cochrane'];
         const models = ['GPT4-o', 'Llama-2-70B', 'Llama-3-70B', 'Mistral-7B', 'OLMo-7B'];
 
-        // Function to parse CSV content
-        function parseCSV(csv) {
-            const lines = csv.split('\n');
-            const headers = lines[0].split('\t');
-            const result = [];
-            for (let i = 1; i < lines.length; i++) {
-                if (lines[i].trim() === '') continue;
-                const [template, textList] = lines[i].split('\t');
-                let parsedText;
-                try {
-                    parsedText = JSON.parse(textList.replace(/'/g, '"').replace(/\\/g, '\\\\'));
-                } catch (error) {
-                    console.error(`Error parsing text for template ${template}:`, error);
-                    parsedText = [textList]; // Use the raw text as a fallback
-                }
-                result.push({
-                    template: template,
-                    text: Array.isArray(parsedText) ? parsedText : [parsedText]
-                });
-            }
-            return result;
-}
-
-        // Function to load CSV file
-        async function loadCSV(filename) {
+        // Function to load JSON file
+        async function loadJSON(filename) {
             try {
                 console.log(`Attempting to load: ${filename}`);
                 const response = await fetch(filename);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                const csvContent = await response.text();
+                const jsonContent = await response.json();
                 console.log(`Successfully loaded: ${filename}`);
-                console.log('First 200 characters of CSV content:', csvContent.substring(0, 200));
-                return parseCSV(csvContent);
+                return jsonContent;
             } catch (error) {
                 console.error(`Error loading ${filename}:`, error);
-                return [];
+                return {};
             }
-}
+        }
+
         // Function to populate dropdowns
         async function populateDropdowns() {
             datasets.forEach(dataset => {
@@ -120,11 +97,11 @@
                 modelSelect.appendChild(option);
             });
 
-            // Load all CSV files and populate combinations object
+            // Load all JSON files and populate combinations object
             for (const dataset of datasets) {
                 for (const model of models) {
-                    const filename = `web/data/${model}_${dataset}.csv`;
-                    const data = await loadCSV(filename);
+                    const filename = `web/data/${model}_${dataset}.json`;
+                    const data = await loadJSON(filename);
                     if (!combinations[dataset]) combinations[dataset] = {};
                     combinations[dataset][model] = data;
                 }
@@ -145,10 +122,10 @@
             templateSelect.innerHTML = '<option value="">Choose a template</option>';
 
             if (selectedDataset && selectedModel && combinations[selectedDataset][selectedModel]) {
-                combinations[selectedDataset][selectedModel].forEach(item => {
+                Object.keys(combinations[selectedDataset][selectedModel]).forEach(template => {
                     const option = document.createElement('option');
-                    option.value = item.template;
-                    option.textContent = item.template;
+                    option.value = template;
+                    option.textContent = template;
                     templateSelect.appendChild(option);
                 });
             }
@@ -160,16 +137,16 @@
             const selectedTemplate = templateSelect.value;
 
             if (selectedDataset && selectedModel && selectedTemplate) {
-                const selectedItem = combinations[selectedDataset][selectedModel].find(item => item.template === selectedTemplate);
-                if (selectedItem && selectedItem.text.length > 0) {
+                const selectedItem = combinations[selectedDataset][selectedModel][selectedTemplate];
+                if (selectedItem && selectedItem.length > 0) {
                     // Display a random text from the list
-                    const randomIndex = Math.floor(Math.random() * selectedItem.text.length);
+                    const randomIndex = Math.floor(Math.random() * selectedItem.length);
                     resultDiv.innerHTML = `
                         <h3 class="h5 mb-3">Output:</h3>
                         <p class="mb-2"><strong>Dataset:</strong> ${selectedDataset}</p>
                         <p class="mb-2"><strong>Model:</strong> ${selectedModel}</p>
                         <p class="mb-2"><strong>Template:</strong> ${selectedTemplate}</p>
-                        <p class="mt-3">${selectedItem.text[randomIndex]}</p>
+                        <p class="mt-3">${selectedItem[randomIndex]}</p>
                     `;
                 } else {
                     resultDiv.innerHTML = '<p class="text-danger">No text available for this combination</p>';
