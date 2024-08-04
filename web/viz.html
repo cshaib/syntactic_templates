@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LLM Output Comparator</title>
+
+    <title>Template Explorer</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         .explanation {
             margin-bottom: 2rem;
         }
     </style>
 </head>
+
 <body class="bg-light">
     <div class="container py-5">
-        <h1 class="text-center mb-4">LLM Output Comparator</h1>
+        <h1 class="text-center mb-4">Template Explorer</h1>
+
 
         <div class="explanation bg-white p-4 rounded shadow-sm">
             <h2 class="h4">What is this?</h2>
@@ -95,6 +99,12 @@
 
         // Function to populate dropdowns
         async function populateDropdowns() {
+<<<<<<< HEAD
+=======
+            const datasets = ['CNN_DailyMail', 'Rotten_Tomatoes', 'Cochrane'];
+            const models = ['Llama-2-70B', 'Llama-3-70B', 'OLMo-7B', 'Mistral-7B', 'GPT4-o'];
+
+>>>>>>> 734c6881e142e2bff72526bb21e53314f62d2b8e
             datasets.forEach(dataset => {
                 const option = document.createElement('option');
                 option.value = dataset;
