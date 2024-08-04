@@ -2,190 +2,117 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <!-- <meta property="og:image" content="https://tau-vailab.github.io/hierarcaps/assets/teaser.png" /> -->
-  <meta property="og:title" content="Detection and Measurement of Syntactic Templates in Generated Text" />
-  <meta property="og:description"
-    content="We define syntactic templates and show that LLMs tend to produce templated text in downstream tasks at higher rates than what is found in human-reference texts." />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="web/style.css">
-  <title>Detection and Measurement of Syntactic Templates in Generated Texts</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta property="og:title" content="Detection and Measurement of Syntactic Templates in Generated Text" />
+    <meta property="og:description" content="We define syntactic templates and show that LLMs tend to produce templated text in downstream tasks at higher rates than what is found in human-reference texts." />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="web/style.css">
+    <title>Detection and Measurement of Syntactic Templates in Generated Texts</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .jumbotron {
+            background-color: #f8f9fa;
+            padding: 2rem 1rem;
+        }
+        .author-link:hover {
+            text-decoration: none;
+        }
+        .btn-custom {
+            margin: 5px;
+        }
+        .abstract {
+            text-align: justify;
+        }
+    </style>
 </head>
 
-<body class="container" style="max-width:840px">
+<body>
+    <div class="container" style="max-width:840px">
+        <div class="jumbotron text-center mt-5">
+            <h1 class="display-4">Detection and Measurement of <br> Syntactic Templates in Generated Text</h1>
+            
+            <div class="mt-4">
+                <a href="https://cshaib.github.io/" class="author-link text-dark mx-2">Chantal Shaib</a>
+                <a href="https://yanaiela.github.io" class="author-link text-dark mx-2">Yanai Elazar</a>
+                <a href="https://jessyli.com/" class="author-link text-dark mx-2">Junyi Jessy Li</a>
+                <a href="https://byronwallace.com/" class="author-link text-dark mx-2">Byron C. Wallace</a>
+            </div>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
-    crossorigin="anonymous"></script>
+            <div class="mt-3">
+                <a href="https://www.khoury.northeastern.edu/" class="text-muted">Northeastern University</a> |
+                <a href="https://allenai.org/" class="text-muted">Allen Institute for AI</a> |
+                <a href="https://www.cs.washington.edu/" class="text-muted">University of Washington</a> |
+                <a href="https://sites.utexas.edu/compling/" class="text-muted">The University of Texas at Austin</a>
+            </div>
 
-  <!-- heading -->
-  <div>
+            <div class="mt-4">
+                <a href="https://arxiv.org/abs/2407.00211" target="_blank" class="btn btn-outline-primary btn-custom">
+                    <i class="ai ai-arxiv"></i> arXiv
+                </a>
+                <a href="https://github.com/cshaib/syntactic_templates" target="_blank" class="btn btn-outline-primary btn-custom">
+                    <i class="fab fa-github"></i> Code
+                </a>
+                <a href="web/viz.html" target="_blank" class="btn btn-outline-primary btn-custom">
+                    <i class="fas fa-eye"></i> Template Explorer
+                </a>
+            </div>
+        </div>
 
-    <!-- title -->
-    <div class='row mt-5 mb-3'>
-      <div class='col text-center'>
-        <p class="h2 font-weight-normal">Detection and Measurement of <br /> Syntactic Templates in Generated Text</p>
-      </div>
-    </div>
+        <div class="card mb-4">
+            <img src="assets/teaser.png" class="card-img-top" alt="Sample templates over the Rotten Tomatoes dataset">
+            <div class="card-body text-center">
+                <p class="card-text"><em>Sample templates over the Rotten Tomatoes dataset.</em></p>
+            </div>
+        </div>
 
-    <!-- authors -->
-    <div class="col text-center h6 font-weight-bold mb-2 ">
-      <span><a class="col-md-4 col-xs-6 pb-2" href="https://cshaib.github.io/">Chantal Shaib</a></span>
-      <span><a class="col-md-4 col-xs-6 pb-2" href="https://yanaiela.github.io">Yanai Elazar</a></span>
-      <span><a class="col-md-4 col-xs-6 pb-2" href="https://jessyli.com/">Junyi Jessy Li</a></span>
-      <span><a class="col-md-4 col-xs-6 pb-2" href="https://byronwallace.com/">Byron C. Wallace</a></span>
-    </div>
+        <div class="alert alert-info" role="alert">
+            <strong>TL;DR:</strong> We define syntactic templates in LLM-generated text, and find that LLMs produce templated text at high rates.
+            Templates can be traced back to the models' training data and persist even after fine-tuning. 
+            Analyzing templates in data can help with assessments of data memorization.
+        </div>
 
-    <!-- affiliations -->
-    <div class='row mb-1'>
-      <div class='col text-center'>
-        <p class="h6">
-          <a href="https://www.khoury.northeastern.edu/"><span>Northeastern University</span></a>
-        </p>
-      </div>
-    </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">Abstract</h2>
+                <p class="card-text abstract">
+                    Recent work on evaluating the diversity of text generated by LLMs has focused on word-level features. 
+                    Here we offer an analysis of syntactic features to characterize general repetition in models, beyond frequent n-grams. 
+                    Specifically, we define syntactic templates and show that models tend to produce templated text in downstream tasks at 
+                    a higher rate than what is found in human-reference texts. 
+                    We find that most (76%) templates in model-generated text can be found in pre-training data 
+                    (compared to only 35% of human-authored text), and are not overwritten during fine-tuning processes such as RLHF. 
+                    This connection to the pre-training data allows us to analyze syntactic templates in models where we do not have the pre-training data. 
+                    We also find that templates as features are able to differentiate between models, tasks, and domains, 
+                    and are useful for qualitatively evaluating common model constructions. 
+                    Finally, we demonstrate the use of templates as a useful tool for analyzing style memorization of training data in LLMs.
+                </p>
+            </div>
+        </div>
 
-    <div class='row mb-1'>
-    <div class='col text-center'>
-        <p class="h6">
-        <a href="https://allenai.org/"><span>Allen Institute for AI</span></a>
-        </p>
-    </div>
-    </div>
-
-    <div class='row mb-1'>
-    <div class='col text-center'>
-        <p class="h6">
-        <a href="https://www.cs.washington.edu/"><span>University of Washington</span></a>
-        </p>
-    </div>
-    </div>
-
-    <div class='row mb-1'>
-        <div class='col text-center'>
-            <p class="h6">
-            <a href="https://sites.utexas.edu/compling/"><span>The University of Texas at Austin</span></a>
-            </p>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">Citation</h2>
+                <pre><code>@misc{shaib2024detectionmeasurementsyntactictemplates,
+    title={Detection and Measurement of Syntactic Templates in Generated Text}, 
+    author={Chantal Shaib and Yanai Elazar and Junyi Jessy Li and Byron C. Wallace},
+    year={2024},
+    eprint={2407.00211},
+    archivePrefix={arXiv},
+    primaryClass={cs.CL},
+    url={https://arxiv.org/abs/2407.00211}, 
+}</code></pre>
+            </div>
         </div>
     </div>
-<!-- 
-    <div class='row mt-2 mb-3'>
-      <div class='col text-center'>
-        <p class="h3 font-weight-normal">ECCV 2024</p> -->
-        <!-- <p class="h6 font-weight-normal">(top XX% of accepted papers)</p> -->
-        <!-- <sup class="fa fa-info-circle" ></sup> -->
-      <!-- </div>
-    </div> -->
 
-    <!-- links -->
-    <div class='row mb-4'>
-      <div class='col text-center'>
-        <a href="https://arxiv.org/abs/2407.00211" target="_blank" class="btn btn-outline-primary" role="button">
-          <i class="ai ai-arxiv"></i>
-          arXiv
-        </a>
-        <a href="https://github.com/cshaib/syntactic_templates" target="_blank" class="btn btn-outline-primary"
-          role="button">
-          <i class="fa fa-github"></i>
-          Code
-        </a>
-        <!-- <a href="https://github.com/TAU-VAILab/hierarcaps/tree/main/data" target="_blank"
-          class="btn btn-outline-primary" role="button">
-          <i class="fa fa-database"></i>
-          Data
-        </a> -->
-        <a href="web/viz.html" target="_blank" class="btn btn-outline-primary" role="button">
-          <i class="fa fa-eye"></i>
-          Template Explorer
-        </a>
-      </div>
-    </div>
-
-    <!-- teaser -->
-    <div class='row justify-content-center'>
-
-      <div class="card teaser teaser_img_card">
-        <img src="assets/teaser.png" class="img-fluid rounded mx-auto d-block teaser_img">
-      </div>
-
-      <div class='text-center col-md-12 col-sm-12 col-xs-12 align-middle mt-1'>
-        <p class='h6'>
-          <em>Sample templates over the Rotten Tomatoes dataset.</em>
-        </p>
-        <hr>
-      </div>
-    </div>
-
-    <!-- TL;DR: -->
-    <div class='col-md-12 col-sm-12 col-xs-12 align-middle mt-1'>
-        <p class="text-break">
-          <b>TL;DR:</b> 
-          We define syntactic templates in LLM-generated text, and find that LLMs produce templated text at high rates.
-          Templates can be traced back to the models' training data and persist even after fine-tuning. 
-          Analyzing templates in data can help with assessments of data memorization. 
-        </p>
-      </div>
-    </div>
-
-    <!-- abstract -->
-    <div class="row">
-      <div class="col-md-12 col-sm-12 col-xs-12">
-        <p class="h4 font-weight-bold title">Abstract</p>
-        <p class="abstract"><!--style="line-height: 1;">-->
-        Recent work on evaluating the diversity of text generated by LLMs has focused on word-level features. 
-        Here we offer an analysis of syntactic features to characterize general repetition in models, beyond frequent n-grams. 
-        Specifically, we define syntactic templates and show that models tend to produce templated text in downstream tasks at 
-        a higher rate than what is found in human-reference texts. 
-        We find that most (76%) templates in model-generated text can be found in pre-training data 
-        (compared to only 35% of human-authored text), and are not overwritten during fine-tuning processes such as RLHF. 
-        This connection to the pre-training data allows us to analyze syntactic templates in models where we do not have the pre-training data. 
-        We also find that templates as features are able to differentiate between models, tasks, and domains, 
-        and are useful for qualitatively evaluating common model constructions. 
-        Finally, we demonstrate the use of templates as a useful tool for analyzing style memorization of training data in LLMs.
-        </p>
-        <hr>
-      </div>
-    </div>
-
-  <!-- ack -->
-  <!-- <div>
-    <div class="row">
-      <div class='col-md-12 col-sm-12 col-xs-12'>
-        <p class='h4 font-weight-bold title'>Acknowledgements</p>
-        <p class="ack">
-          This work was partially supported by the Alon Fellowship. We thank Gal Fiebelman and Taelin
-          Karidi for their helpful feedback.
-        </p>
-      </div>
-    </div>
-    <hr>
-  </div> -->
-
-  <!-- citation -->
-  <div class="row">
-    <div class="col-md-12 col-sm-12 col-xs-12">
-      <p class="h4 font-weight-bold title">Citation</p>
-      <pre><code>@misc{shaib2024detectionmeasurementsyntactictemplates,
-        title={Detection and Measurement of Syntactic Templates in Generated Text}, 
-        author={Chantal Shaib and Yanai Elazar and Junyi Jessy Li and Byron C. Wallace},
-        year={2024},
-        eprint={2407.00211},
-        archivePrefix={arXiv},
-        primaryClass={cs.CL},
-        url={https://arxiv.org/abs/2407.00211}, 
-  }</code></pre>
-    </div>
-  </div>
-
-  <script src="web/gallery.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="web/gallery.js"></script>
 </body>
 
 </html>
