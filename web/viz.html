@@ -84,16 +84,27 @@
                 const text = await response.text();
                 const lines = text.trim().split('\n');
                 const data = {};
-                lines.forEach(line => {
-                    const jsonObjects = JSON.parse(line);
-                    jsonObjects.forEach(obj => {
-                        if (!data[obj.template]) {
-                            data[obj.template] = [];
-                        }
-                        // Parse the text array string into an actual array
-                        const textArray = JSON.parse(obj.text.replace(/'/g, '"'));
-                        data[obj.template] = data[obj.template].concat(textArray);
-                    });
+                lines.forEach((line, lineIndex) => {
+                    try {
+                        const jsonObjects = JSON.parse(line);
+                        jsonObjects.forEach(obj => {
+                            if (!data[obj.template]) {
+                                data[obj.template] = [];
+                            }
+                            // Handle the text field which might be a string representation of an array
+                            let textArray;
+                            try {
+                                textArray = JSON.parse(obj.text.replace(/'/g, '"'));
+                            } catch (textParseError) {
+                                console.warn(`Error parsing text array on line ${lineIndex + 1}:`, textParseError);
+                                textArray = [obj.text]; // Fallback to treating it as a single string
+                            }
+                            data[obj.template] = data[obj.template].concat(textArray);
+                        });
+                    } catch (lineParseError) {
+                        console.error(`Error parsing JSON on line ${lineIndex + 1}:`, lineParseError);
+                        console.error('Problematic line:', line);
+                    }
                 });
                 console.log(`Successfully loaded: ${filename}`);
                 return data;
