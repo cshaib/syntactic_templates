@@ -21,8 +21,8 @@
             <p> This tool allows you to explore text from models that match to part-of-speech templates. 
                 Select a dataset, model, and template to see snippets of text corresponding to the pos template. </p>
             <ul>
-                <li><strong>Dataset:</strong> The source of the input data (e.g., CNN/DailyMail for news summarization).</li>
-                <li><strong>Model:</strong> The LLM used to generate the output (e.g., GPT-4o, Llama-2).</li>
+                <li><strong>Dataset:</strong> The source of the input data (e.g., CNN_DailyMail for news summarization).</li>
+                <li><strong>Model:</strong> The LLM used to generate the output (e.g., GPT4-o, Llama-2-70B).</li>
                 <li><strong>Template:</strong> The part-of-speech pattern.</li>
             </ul>
         </div>
@@ -47,7 +47,7 @@
         </div>
 
         <div class="mt-4">
-            <a href="https://cshaib.github.io/syntactic_templates/index.html" class="btn btn-primary">Back to Project Page</a>
+            <a href="index.html" class="btn btn-primary">Back to Main Page</a>
         </div>
     </div>
 
@@ -64,17 +64,26 @@
         const datasets = ['CNN_DailyMail', 'Rotten Tomatoes', 'Cochrane'];
         const models = ['GPT4-o', 'Llama-2-70B', 'Llama-3-70B', 'Mistral-7B', 'OLMo-7B'];
 
-        // Function to load JSON file
-        async function loadJSON(filename) {
+        // Function to load and parse JSON Lines file
+        async function loadJSONL(filename) {
             try {
                 console.log(`Attempting to load: ${filename}`);
                 const response = await fetch(filename);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                const jsonContent = await response.json();
+                const text = await response.text();
+                const lines = text.trim().split('\n');
+                const data = {};
+                lines.forEach(line => {
+                    const obj = JSON.parse(line);
+                    if (!data[obj.template]) {
+                        data[obj.template] = [];
+                    }
+                    data[obj.template].push(obj.text);
+                });
                 console.log(`Successfully loaded: ${filename}`);
-                return jsonContent;
+                return data;
             } catch (error) {
                 console.error(`Error loading ${filename}:`, error);
                 return {};
@@ -97,11 +106,11 @@
                 modelSelect.appendChild(option);
             });
 
-            // Load all JSON files and populate combinations object
+            // Load all JSONL files and populate combinations object
             for (const dataset of datasets) {
                 for (const model of models) {
-                    const filename = `data/${model}_${dataset}.json`;
-                    const data = await loadJSON(filename);
+                    const filename = `web/data/${model}_${dataset}.jsonl`;
+                    const data = await loadJSONL(filename);
                     if (!combinations[dataset]) combinations[dataset] = {};
                     combinations[dataset][model] = data;
                 }
@@ -111,7 +120,9 @@
             datasetSelect.value = datasets[0];
             modelSelect.value = models[0];
             await updateTemplates();
-            templateSelect.value = templateSelect.options[1].value; // Select the first non-empty option
+            if (templateSelect.options.length > 1) {
+                templateSelect.value = templateSelect.options[1].value; // Select the first non-empty option
+            }
             updateResult();
         }
 

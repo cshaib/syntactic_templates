@@ -16,9 +16,10 @@ for csv_file in csv_files:
     json_data = df.to_json(orient='records')
     
     # Specify the output JSON file path
-    json_file = os.path.splitext(csv_file)[0] + '.json'
-    json_path = os.path.join(csv_directory, json_file)
+    json_file = os.path.splitext(csv_file)[0] + '.jsonl'
+    df.to_json(json_file, orient='records')
+    # json_path = os.path.join(csv_directory, json_file)
     
-    # Write the JSON data to the output file
-    with open(json_path, 'w') as f:
-        f.write(json_data)
+    # # Write the JSON data to the output file
+    # with open(json_path, 'w') as f:
+    #     f.write(json_data)
