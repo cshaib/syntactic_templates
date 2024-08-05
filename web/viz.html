@@ -109,7 +109,7 @@
             // Load all JSONL files and populate combinations object
             for (const dataset of datasets) {
                 for (const model of models) {
-                    const filename = `web/data/${model}_${dataset}.jsonl`;
+                    const filename = `data/${model}_${dataset}.jsonl`;
                     const data = await loadJSONL(filename);
                     if (!combinations[dataset]) combinations[dataset] = {};
                     combinations[dataset][model] = data;
