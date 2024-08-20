@@ -1,11 +1,13 @@
 import os
 import pandas as pd
 
-# Specify the directory containing the CSV files
-csv_directory = 'data/csvs/'
+data_directory = 'data/'
 
-# Get a list of all CSV files in the directory
-csv_files = [file for file in os.listdir(csv_directory) if file.endswith('.csv')]
+
+
+
+
+
 
 # Convert each CSV file to JSON
 for csv_file in csv_files:
@@ -23,3 +25,4 @@ for csv_file in csv_files:
     # # Write the JSON data to the output file
     # with open(json_path, 'w') as f:
     #     f.write(json_data)
+
