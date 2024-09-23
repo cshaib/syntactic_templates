@@ -93,6 +93,10 @@
     margin-bottom: 0;
     white-space: nowrap;
 }
+
+.btn-group {
+            margin-bottom: 20px;
+}
     </style>
 </head>
 <body>
@@ -100,12 +104,16 @@
         <div class="title-container">
             <h1>🔎 Template Explorer 🔎</h1>
         </div>
+
+        <div class="btn-group mb-4">
+            <a href="matcher_viz.html" class="btn btn-primary">Explore Just the Templates</a>
+        </div>
         
         <div class="boxed mb-4">
             <h2>What is this?</h2>
             <p>This tool allows you to explore text from language models that match specific part-of-speech (POS) templates. 
                 You can select a dataset, model, template length, and POS templates to see how they appear in generated summaries.
-                Note that some templates can overlap! These spans be displayed as a mixture of colours. </p>
+                Note that some templates can overlap! These spans will be displayed as a mixture of colours. </p>
         </div>
 
         <div class="row mb-4">
